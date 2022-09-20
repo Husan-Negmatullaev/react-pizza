@@ -1,0 +1,37 @@
+.searchHeader {
+   flex: 0 1 430px;
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   border: 1px solid rgba(0, 0, 0, 0.1);
+   border-radius: 12px;
+   padding: 0px 15px;
+
+   &__button {
+      background-color: transparent;
+      border: none;
+      outline: none;
+      display: inline-flex;
+      cursor: pointer;
+   }
+
+   &__icon {
+      width: 20px;
+      height: 20px;
+      fill: rgba(0, 0, 0, 0.6);
+
+      &_cross {
+         width: 23px;
+         height: 23px;
+         fill: rgb(0, 0, 0);
+      }
+   }
+
+   &__input {
+      flex: 1 1 auto;
+      border: none;
+      outline: none;
+      font-size: 18px;
+      height: 45px;
+   }
+}
