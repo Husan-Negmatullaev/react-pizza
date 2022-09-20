@@ -13,6 +13,7 @@ const Home = ({ searchValue }) => {
    const [isLoaded, setIsLoaded] = React.useState(false);
    const [categoryId, setCategoryId] = React.useState(0);
    const [sortBy, setSortBy] = React.useState({ label: 'популярности (DESC)', sortType: 'rating' });
+   const [currentPage, setCurrentPage] = React.useState(1);
 
    React.useEffect(() => {
       setIsLoaded(false);
@@ -22,15 +23,15 @@ const Home = ({ searchValue }) => {
       const order = sortBy.sortType.includes('-') ? 'asc' : 'desc';
       const search = searchValue ? `&search=${searchValue}` : "";
 
-      fetch(`${mockApiUrl}/pizzas?${category}&sortBy=${sort}&order=${order}${search}`)
+      fetch(`${mockApiUrl}/pizzas?&page=${currentPage}&limit=4&${category}&sortBy=${sort}&order=${order}${search}`)
          .then((res) => res.json())
          .then((data) => {
             setIsLoaded(true);
             setPizzas(data);
          });
 
-      window.scrollTo(0, 0);
-   }, [categoryId, sortBy, searchValue]);
+      // window.scrollTo(0, 0);
+   }, [categoryId, sortBy, searchValue, currentPage]);
 
    // function filterBySearchValue(items) {
    //    const newItems = items;
@@ -48,7 +49,7 @@ const Home = ({ searchValue }) => {
 
    const items = pizzas.map((item) => <PizzaBlock key={item.id} {...item} />);
 
-   const pizzasSkeleons = [...new Array(6)].map((_, i) => <PizzaSkeleton key={i} />);
+   const pizzasSkeleons = [...new Array(4)].map((_, i) => <PizzaSkeleton key={i} />);
 
    return (
       <div className="container">
@@ -63,7 +64,7 @@ const Home = ({ searchValue }) => {
                isLoaded ? items : pizzasSkeleons
             }
          </div>
-         <Pagination />
+         <Pagination onChangePage={(number) => setCurrentPage(number)} />
       </div>
    );
 };

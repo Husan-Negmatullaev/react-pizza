@@ -1,4 +1,38 @@
 .pagination {
+   &__list {
+      display: flex;
+      column-gap: 10px;
+      row-gap: 5px;
+      flex-wrap: wrap;
+      align-items: center;
 
-   &__list {}
+      li {
+         a {
+            cursor: pointer;
+            display: inline-flex;
+            width: 40px;
+            height: 40px;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #fe5f1e;
+            border-radius: 30px;
+            color: #fe5f1e;
+            transition: all 0.2s ease 0s;
+
+            @media (any-hover: hover) {
+               &:hover {
+                  background-color: #fe5f1e;
+                  color: #fff;
+               }
+            }
+         }
+      }
+   }
+
+   :global {
+      .selected a {
+         background-color: #fe5f1e;
+         color: #fff;
+      }
+   }
 }
