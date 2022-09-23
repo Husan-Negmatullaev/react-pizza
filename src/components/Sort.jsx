@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux/es/exports";
 import { setSort } from "../redux/slices/filterSlice";
 
-const list = [
+export const sortList = [
    { label: "популярности (DESC)", sortType: "rating" },
    { label: "популярности (ASC)", sortType: "-rating" },
    { label: "цене (DESC)", sortType: "price" },
@@ -12,17 +12,40 @@ const list = [
 ];
 
 function Sort() {
-   const [open, setOpen] = React.useState(false);
+   // const [open, setOpen] = React.useState(false);
    const sort = useSelector(state => state.filter.sort)
    const dispatch = useDispatch();
+   const sortRef = useRef();
 
    const onClickMenuItem = (obj) => {
       dispatch(setSort(obj));
-      setOpen(false);
+      // setOpen(false);
    };
 
+   React.useEffect(() => {
+      const documentActions = (e) => {
+         const targetItem = e.target;
+
+         if (targetItem.closest(".sort")) {
+            targetItem.closest(".sort").classList.toggle("_click");
+         }
+         if (!targetItem.closest(".sort") && document.querySelector(".sort._click")) {
+            document.querySelector(".sort._click").classList.remove("_click");
+         }
+      }
+
+      document.addEventListener("click", documentActions);
+
+      return () => {
+         document.removeEventListener("click", documentActions);
+      }
+   }, [])
+
    return (
-      <div className="sort">
+      <div
+         ref={sortRef}
+         className="sort"
+      >
          <div className="sort__label">
             <svg
                width="10"
@@ -37,20 +60,18 @@ function Sort() {
                />
             </svg>
             <b>Сортировка по:</b>
-            <span onClick={() => setOpen(!open)}>{sort.label}</span>
+            <span>{sort.label}</span>
          </div>
-         {open && (
-            <div className="sort__popup">
-               <ul>
-                  {list.map((obj, i) => (
-                     <li key={i} onClick={() => onClickMenuItem(obj)} className={sort.sortType === obj.sortType ? "active" : ""}>
-                        {obj.label}
-                     </li>
-                  )
-                  )}
-               </ul>
-            </div>
-         )}
+         <div className="sort__popup">
+            <ul>
+               {sortList.map((obj, i) => (
+                  <li key={i} onClick={() => onClickMenuItem(obj)} className={sort.sortType === obj.sortType ? "active" : ""}>
+                     {obj.label}
+                  </li>
+               )
+               )}
+            </ul>
+         </div>
       </div>
    );
 }

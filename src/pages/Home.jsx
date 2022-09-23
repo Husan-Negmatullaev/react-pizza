@@ -1,17 +1,21 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from "react-router-dom";
+import qs from "qs";
 import axios from 'axios';
 
 // import { SearchContext } from '../App';
-import Sort from '../components/Sort';
+import Sort, { sortList } from '../components/Sort';
 import Categories from '../components/Categories';
 import PizzaBlock from '../components/PizzaBlock';
 import PizzaSkeleton from '../components/PizzaBlock/Skeleton';
 import Pagination from '../components/Pagination';
 
-import { setCategoryId, setCurrentPage } from '../redux/slices/filterSlice';
+import { setCategoryId, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
 
 const Home = () => {
+   const mockApiUrl = 'https://6327376fba4a9c4753333f88.mockapi.io/';
+
    const {
       categoryId,
       sort,
@@ -20,15 +24,14 @@ const Home = () => {
    } = useSelector(state => state.filter);
    const { sortType } = sort;
    const dispatch = useDispatch();
+   const navigate = useNavigate();
 
-   // const { searchQuery } = React.useContext(SearchContext)
    const [pizzas, setPizzas] = React.useState([]);
    const [isLoaded, setIsLoaded] = React.useState(false);
-   // const [currentPage, setCurrentPage] = React.useState(1);
+   const isSearch = React.useRef(false);
+   const isMounted = React.useRef(false);
 
-   const mockApiUrl = 'https://6327376fba4a9c4753333f88.mockapi.io/';
-
-   React.useEffect(() => {
+   const fetchPizzas = () => {
       setIsLoaded(false);
 
       const category = categoryId > 0 ? `category=${categoryId}` : '';
@@ -43,7 +46,41 @@ const Home = () => {
             setIsLoaded(true);
             setPizzas(res.data);
          })
+   }
+
+   React.useEffect(() => {
+      if (!isSearch.current) {
+         fetchPizzas();
+      }
+      isSearch.current = false;
    }, [categoryId, sortType, searchQuery, currentPage]);
+
+   React.useEffect(() => {
+      if (window.location.search) {
+         const params = qs.parse(window.location.search.substring(1))
+         const sort = sortList.find(obj => obj.sortType === params.sortType);
+
+         dispatch(setFilters({
+            ...params,
+            sort
+         }))
+
+         isSearch.current = true;
+      }
+   }, [])
+
+   React.useEffect(() => {
+      if (isMounted.current) {
+         const queryString = qs.stringify({
+            categoryId,
+            sortType,
+            currentPage,
+         });
+
+         navigate(`?${queryString}`);
+      }
+      isMounted.current = true;
+   }, [categoryId, sortType, currentPage, navigate])
 
    const onClickCategory = (id) => {
       dispatch(setCategoryId(id))

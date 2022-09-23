@@ -13,10 +13,6 @@
 
       b {
          margin-right: 8px;
-
-         // @media (max-width: 1300px) {
-         //    display: none;
-         // }
       }
 
       span {
@@ -36,6 +32,11 @@
       overflow: hidden;
       padding: 10px 0;
       width: 160px;
+      display: none;
+
+      ._click & {
+         display: block;
+      }
 
       ul {
          overflow: hidden;
