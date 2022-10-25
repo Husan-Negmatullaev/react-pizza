@@ -1,29 +1,31 @@
 import React from 'react';
 import useDebounce from '../../helpers/useDebounce';
 import { useDispatch, useSelector } from "react-redux";
-import { setSearchQuery } from '../../redux/slices/filterSlice';
+import { selectFilter } from '../../redux/filter/selectors';
+import { setSearchQuery } from '../../redux/filter/slice';
 
 import styles from './Search.module.scss';
 
-const Search = () => {
+const Search: React.FC = () => {
    const [inputValue, setInputVlaue] = React.useState('');
-   const { searchQuery } = useSelector(state => state.filter);
+   const { searchQuery } = useSelector(selectFilter);
    const dispatch = useDispatch();
-   const inputRef = React.useRef(null);
+   const inputRef = React.useRef<HTMLInputElement>(null);
 
-   const handleSearchValue = useDebounce((value) => {
+   const handleSearchValue = useDebounce((value: string) => {
       dispatch(setSearchQuery(value));
    }, 250);
 
-   const onChangeEvent = (event) => {
-      setInputVlaue(event.target.value);
-      handleSearchValue(event.target.value);
+   const onChangeEvent: React.ChangeEventHandler = (event: React.ChangeEvent<HTMLInputElement>): void => {
+      const targetItemValue = event.target.value;
+      setInputVlaue(targetItemValue);
+      handleSearchValue(targetItemValue);
    };
 
-   const onClickClear = () => {
+   const onClickClear: React.MouseEventHandler = (): void => {
       setInputVlaue("");
       dispatch(setSearchQuery(""));
-      inputRef.current.focus();
+      inputRef.current?.focus?.();
    }
 
    return (

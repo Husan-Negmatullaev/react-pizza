@@ -146,4 +146,16 @@
          font-size: 16px;
       }
    }
+
+   &--disabled {
+      background-color: transparent;
+      border-color: #B6B6B6;
+
+      svg {
+
+         path {
+            fill: #B6B6B6;
+         }
+      }
+   }
 }

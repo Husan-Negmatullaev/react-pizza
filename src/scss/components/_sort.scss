@@ -32,11 +32,10 @@
       overflow: hidden;
       padding: 10px 0;
       width: 160px;
-      display: none;
 
-      ._click & {
-         display: block;
-      }
+      // ._click & {
+      //    display: block;
+      // }
 
       ul {
          overflow: hidden;
